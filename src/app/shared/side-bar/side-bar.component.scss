@@ -1,0 +1,21 @@
+.sideBarContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profileContainer{
+  border-top: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+}
+.imageContainer {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+

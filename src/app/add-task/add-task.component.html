@@ -1,0 +1,88 @@
+<div
+  class="modal fade"
+  [class.show]="isOpen"
+  [style.display]="isOpen ? 'block' : 'none'"
+  role="dialog"
+  id="addTaskModal"
+  tabindex="-1"
+  aria-labelledby="addTaskModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModal()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onFormSubmit()" #addTaskForm="ngForm">
+          <div class="mb-3">
+            <label for="taskTitle" class="form-label">Task title</label>
+            <input
+              type="text"
+              id="taskTitle"
+              class="form-control"
+              ngModel
+              name="taskTitle"
+              aria-describedby="titleHelp"
+            />
+            <div id="titleHelp" class="form-text">
+              This title would be the headline of your task
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="dueDate" class="form-label">Due date</label>
+            <input
+              type="date"
+              id="dueDate"
+              class="form-control"
+              ngModel
+              name="dueDate"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="taskPriority" class="form-label">Task Priority</label>
+            <select
+              class="form-select"
+              aria-label="select the task priority"
+              id="taskPriority"
+              ngModel
+              name="taskPriority"
+            >
+              <option selected disabled hidden name="taskPriority">
+                choose the task Priority
+              </option>
+              <option value="High" name="taskPriority">High</option>
+              <option value="Low" name="taskPriority">Low</option>
+              <option value="Medium" name="taskPriority">Medium</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="taskStatus" class="form-label">Task Status</label>
+            <select
+              class="form-select"
+              aria-label="select the task status"
+              id="taskStatus"
+              ngModel
+              name="taskStatus"
+            >
+              <option selected disabled hidden>choose the task status</option>
+              <option value="to do" name="taskStatus">to do</option>
+              <option value="in progress" name="taskStatus">in progress</option>
+              <option value="done" name="taskStatus">done</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="reset" class="btn btn-danger" (click)="closeModal()">
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
