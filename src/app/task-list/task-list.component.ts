@@ -34,6 +34,7 @@ export class TaskListComponent implements OnInit {
 
   addNewTask(task: Task) {
     this.taskStore.addTask(task);
+    this.loadTasks();
   }
 
   onViewTask(taskId: number) {}
