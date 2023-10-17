@@ -5,9 +5,10 @@ import { AppComponent } from './app.component';
 import { SideBarComponent } from './shared/side-bar/side-bar.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { AddTaskComponent } from './add-task/add-task.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialsModule } from './materials/materials.module';
+import { FormTaskDialogComponent } from './form-task-dialog/form-task-dialog.component';
 
 @NgModule({
   declarations: [
@@ -15,9 +16,16 @@ import { MaterialsModule } from './materials/materials.module';
     SideBarComponent,
     TaskListComponent,
     AddTaskComponent,
+    FormTaskDialogComponent,
   ],
-  imports: [BrowserModule, FormsModule, BrowserAnimationsModule, MaterialsModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MaterialsModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

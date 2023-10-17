@@ -12,6 +12,7 @@ export class TaskStoreService {
 
   addTask(task: Task): void {
     this.tasks.push(task);
+    console.table(this.tasks);
   }
 
   getAllTasks(): Task[] {

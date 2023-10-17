@@ -10,17 +10,27 @@ import { TaskStoreService } from '../task-store.service';
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
   allTasks: Task[] = [];
+  displayedColumns: string[] = [
+    'taskId',
+    'title',
+    'dueDate',
+    'priority',
+    'status',
+    'actions',
+  ];
   priorities = Object.values(Priority);
   statuses = Object.values(Status);
   selectedStatus: string = '';
   selectedPriority: string = '';
   selectedDate: string = '';
+  uniqueDates: Date[] = [];
   @Output() openModalEvent: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private taskStore: TaskStoreService) {}
 
   ngOnInit(): void {
     this.loadTasks();
+    this.uniqueDates = this.getUniqueDates();
   }
 
   loadTasks(): void {
@@ -52,26 +62,29 @@ export class TaskListComponent implements OnInit {
 
   filterTasks() {
     this.tasks = this.allTasks.filter((task) => {
-      let statusMatch = true,
-        priorityMatch = true,
-        dateMatch = true;
-
-      if (this.selectedStatus) {
-        statusMatch = task.status === this.selectedStatus;
-      }
-
-      if (this.selectedPriority) {
-        priorityMatch = task.priority === this.selectedPriority;
-      }
-
-      if (this.selectedDate) {
-        const selectedDateObj = new Date(this.selectedDate);
-        dateMatch =
-          task.dueDate.toISOString().split('T')[0] ===
-          selectedDateObj.toISOString().split('T')[0];
-      }
-
-      return statusMatch && priorityMatch && dateMatch;
+      return (
+        this.statusMatches(task) &&
+        this.priorityMatches(task) &&
+        this.dateMatches(task)
+      );
     });
+  }
+
+  statusMatches(task: Task): boolean {
+    return this.selectedStatus ? task.status === this.selectedStatus : true;
+  }
+
+  priorityMatches(task: Task): boolean {
+    return this.selectedPriority
+      ? task.priority === this.selectedPriority
+      : true;
+  }
+
+  dateMatches(task: Task): boolean {
+    if (this.selectedDate) {
+      const selectedDateObj = new Date(this.selectedDate);
+      return task.dueDate.toDateString() === selectedDateObj.toDateString();
+    }
+    return true;
   }
 }

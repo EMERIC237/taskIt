@@ -1,22 +1,9 @@
-.material-icons {
-  cursor: pointer;
-  color: #333; // Default color
-
-  &:hover {
-    color: #007bff; // Color when the mouse hovers over the icon
-  }
+table {
+  width: 100%;
 }
 
-.custom-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid #dee2e6;
-  border-radius: 20px;
-  overflow: hidden;
-  background-color: white;
-
-  th,
-  td {
-    border: none;
-  }
+.action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

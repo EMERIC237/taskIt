@@ -1,0 +1,18 @@
+<div class="card border-warning mb-3" style="max-width: 18rem">
+  <div class="card-header">
+    <div>{{ task.title }}</div>
+    <div>
+      <select class="form-select d-inline-block w-auto mr-2">
+        <option value="" selected hidden>Status</option>
+        <option value="">--All--</option>
+        <option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+    <div class="card-body text-warning">
+      <p>priority: {{ task.priority }}</p>
+      <p>due date: {{ task.dueDate }}</p>
+    </div>
+  </div>
+</div>
