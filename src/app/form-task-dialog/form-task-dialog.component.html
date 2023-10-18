@@ -1,10 +1,13 @@
-<h2 mat-dialog-title>{{ data.selectedTask ? "Edit Task" : "Add New Task" }}</h2>
+<h2 mat-dialog-title>{{ task ? "Edit Task" : "Add New Task" }}</h2>
 
 <mat-dialog-content>
   <form [formGroup]="formGroup" (ngSubmit)="submitForm()">
     <mat-form-field>
       <mat-label>Task Title</mat-label>
       <input matInput formControlName="taskTitle" />
+      <mat-error *ngIf="formGroup.get('taskTitle')?.invalid && formGroup.get('taskTitle')?.touched">
+        Task Title is required.
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -12,6 +15,9 @@
       <input matInput [matDatepicker]="picker" formControlName="dueDate" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="formGroup.get('dueDate')?.invalid && formGroup.get('dueDate')?.touched">
+        Due Date is required.
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -21,6 +27,9 @@
         <mat-option value="Medium">Medium</mat-option>
         <mat-option value="Low">Low</mat-option>
       </mat-select>
+      <mat-error *ngIf="formGroup.get('taskPriority')?.invalid && formGroup.get('taskPriority')?.touched">
+        Priority is required.
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -30,11 +39,15 @@
         <mat-option value="in progress">In Progress</mat-option>
         <mat-option value="done">Done</mat-option>
       </mat-select>
+      <mat-error *ngIf="formGroup.get('taskStatus')?.invalid && formGroup.get('taskStatus')?.touched">
+        Status is required.
+      </mat-error>
     </mat-form-field>
 
-    <button mat-button type="submit" [disabled]="!formGroup.valid">
+    <button mat-button type="submit" [disabled]="!formGroup.valid || isLoading">
       Submit
     </button>
+    <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
   </form>
 </mat-dialog-content>
 

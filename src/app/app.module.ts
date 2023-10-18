@@ -9,6 +9,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialsModule } from './materials/materials.module';
 import { FormTaskDialogComponent } from './form-task-dialog/form-task-dialog.component';
+import { AppRoutingModule } from './app-routing.module';
+import { KanbanBoardComponent } from './kanban-board/kanban-board.component';
+import { TaskCardComponent } from './components/task-card/task-card.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,8 @@ import { FormTaskDialogComponent } from './form-task-dialog/form-task-dialog.com
     TaskListComponent,
     AddTaskComponent,
     FormTaskDialogComponent,
+    KanbanBoardComponent,
+    TaskCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -24,6 +29,7 @@ import { FormTaskDialogComponent } from './form-task-dialog/form-task-dialog.com
     BrowserAnimationsModule,
     MaterialsModule,
     ReactiveFormsModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

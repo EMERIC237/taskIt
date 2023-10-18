@@ -1,13 +1,22 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
 import { TaskStoreService } from '../task-store.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormTaskDialogComponent } from '../form-task-dialog/form-task-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   allTasks: Task[] = [];
   displayedColumns: string[] = [
@@ -18,18 +27,25 @@ export class TaskListComponent implements OnInit {
     'status',
     'actions',
   ];
+
   priorities = Object.values(Priority);
   statuses = Object.values(Status);
   selectedStatus: string = '';
   selectedPriority: string = '';
   selectedDate: string = '';
   uniqueDates: Date[] = [];
+  private taskSubscription = new Subscription();
   @Output() openModalEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private taskStore: TaskStoreService) {}
+  constructor(private taskStore: TaskStoreService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.taskSubscription.add(
+      this.taskStore.tasksChange$.subscribe((tasks) => {
+        this.allTasks = tasks;
+        this.tasks = [...this.allTasks];
+      })
+    );
     this.uniqueDates = this.getUniqueDates();
   }
 
@@ -39,7 +55,16 @@ export class TaskListComponent implements OnInit {
   }
 
   onAddNewTask() {
-    this.openModalEvent.emit();
+    const dialogRef = this.dialog.open(FormTaskDialogComponent, {
+      data: { selectedTask: null },
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((task: Task) => {
+      if (task) {
+        this.addNewTask(task);
+      }
+    });
   }
 
   addNewTask(task: Task) {
@@ -86,5 +111,9 @@ export class TaskListComponent implements OnInit {
       return task.dueDate.toDateString() === selectedDateObj.toDateString();
     }
     return true;
+  }
+
+  ngOnDestroy(): void {
+    this.taskSubscription.unsubscribe();
   }
 }

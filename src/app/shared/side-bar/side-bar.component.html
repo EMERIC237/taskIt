@@ -1,7 +1,10 @@
 <div class="sideBarContainer">
   <div class="m-4">
     <h1><span class="text-success">TASK</span>IT</h1>
-    <button class="btn btn-success">Task List</button>
+    <div class="d-flex flex-column gap-2">
+      <button class="btn btn-success" (click)="gotoTask()">Task List</button>
+      <button class="btn btn-success" (click)="gotoKanban()">KanBan Board</button>
+    </div>
   </div>
   <div class="d-flex align-items-center border-top border-2">
     <img

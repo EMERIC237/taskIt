@@ -3,8 +3,6 @@
     <app-side-bar></app-side-bar>
   </mat-sidenav>
   <mat-sidenav-content class="p-5 d-flex flex-column">
-    <app-task-list (openModalEvent)="openAddTaskModal()"></app-task-list>
-    <mat-divider></mat-divider>
-    <app-add-task (addNewTaskEvent)="createNewTask($event)"></app-add-task>
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

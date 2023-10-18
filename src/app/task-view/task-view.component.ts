@@ -12,7 +12,6 @@ export class TaskViewComponent {
   constructor(private taskStore: TaskStoreService) {}
   showModalView(taskId: number) {
     const currTask = this.taskStore.getTaskById(taskId);
-    console.log('this is the modal to be showed: ', currTask);
   }
   closeModal() {
     this.isOpen = false;

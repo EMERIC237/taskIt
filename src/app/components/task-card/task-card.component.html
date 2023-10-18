@@ -1,18 +1,31 @@
-<div class="card border-warning mb-3" style="max-width: 18rem">
-  <div class="card-header">
-    <div>{{ task.title }}</div>
-    <div>
-      <select class="form-select d-inline-block w-auto mr-2">
-        <option value="" selected hidden>Status</option>
-        <option value="">--All--</option>
-        <option *ngFor="let status of statuses" [value]="status">
-          {{ status }}
-        </option>
-      </select>
-    </div>
-    <div class="card-body text-warning">
-      <p>priority: {{ task.priority }}</p>
-      <p>due date: {{ task.dueDate }}</p>
-    </div>
+<mat-card>
+  <!-- Task Title and Status Dropdown -->
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <span>{{ task.title }}</span>
+
+    <mat-select
+      [(ngModel)]="task.status"
+      (selectionChange)="onStatusChange($event.value)"
+      placeholder="{{ task.status }}"
+    >
+      <mat-option selected value="to do">To Do</mat-option>
+      <mat-option value="in progress">In Progress</mat-option>
+      <mat-option value="done">Done</mat-option>
+    </mat-select>
   </div>
-</div>
+
+  <!-- Priority with Arrow Icon -->
+  <div style="margin-top: 8px">
+    Priority: {{ task.priority }}
+    <mat-icon>
+      {{ getPriorityIcon(task.priority) }}
+    </mat-icon>
+  </div>
+
+  <!-- Due Date -->
+  <div style="margin-top: 8px">
+    Due Date: {{ task.dueDate | date : "shortDate" }}
+  </div>
+</mat-card>

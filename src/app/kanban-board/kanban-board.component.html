@@ -1,5 +1,43 @@
-<div class="flex-column">
-<div></div>
-<div></div>
-<div></div>
+<mat-toolbar color="primary" style="background-color: green">
+  <span>KanBan</span>
+</mat-toolbar>
+
+<div
+  class="d-flex gap-5 flex-row h-100 vh-80 justify-content-center align-items-center"
+>
+  <mat-card class="card-board">
+    <mat-card-title>To do</mat-card-title>
+    <mat-card-content>
+      <ng-container *ngFor="let task of toDoTasks; let i = index">
+        <app-task-card
+          [task]="task"
+          (statusChanged)="onStatusChange(task.taskId, $event)"
+        ></app-task-card>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card-board">
+    <mat-card-title>In progress</mat-card-title>
+    <mat-card-content>
+      <ng-container *ngFor="let task of InProgressTask; let i = index">
+        <app-task-card
+          [task]="task"
+          (statusChanged)="onStatusChange(task.taskId, $event)"
+        ></app-task-card>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card-board">
+    <mat-card-title>Done</mat-card-title>
+    <mat-card-content>
+      <ng-container *ngFor="let task of DoneTasks; let i = index">
+        <app-task-card
+          [task]="task"
+          (statusChanged)="onStatusChange(task.taskId, $event)"
+        ></app-task-card>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
 </div>

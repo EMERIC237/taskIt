@@ -1,18 +1,25 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
 import { mockTasks } from './data/taskStoreData';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskStoreService {
   private tasks: Task[] = [...mockTasks];
+  private tasksChangeSubject: BehaviorSubject<Task[]> = new BehaviorSubject<
+    Task[]
+  >(this.tasks);
 
-  constructor() {}
+  get tasksChange$() {
+    return this.tasksChangeSubject.asObservable();
+  }
 
   addTask(task: Task): void {
     this.tasks.push(task);
-    console.table(this.tasks);
+    // push the new changes
+    this.tasksChangeSubject.next(this.tasks);
   }
 
   getAllTasks(): Task[] {
@@ -30,6 +37,25 @@ export class TaskStoreService {
     if (index !== -1) {
       this.tasks[index] = updatedTask;
     }
+    // push the new changes
+    this.tasksChangeSubject.next(this.tasks);
+  }
+
+  updateTaskStatus(taskId: number, newStatus: Status): void {
+    const task = this.getTaskById(taskId);
+    if (task) {
+      task.status = newStatus;
+      this.updateTask(task);
+    }
+    console.log(this.tasks)
+  }
+
+  updateTaskPriority(taskId: number, newPriority: Priority): void {
+    const task = this.getTaskById(taskId);
+    if (task) {
+      task.priority = newPriority;
+      this.updateTask(task);
+    }
   }
 
   deleteTask(taskId: number): void {
@@ -37,6 +63,9 @@ export class TaskStoreService {
     if (index !== -1) {
       this.tasks.splice(index, 1);
     }
+
+    // push the new changes
+    this.tasksChangeSubject.next(this.tasks);
   }
 
   getAllUniqueStatuses(): Status[] {
@@ -64,7 +93,6 @@ export class TaskStoreService {
     date = new Date(date);
 
     const filteredTasks = this.tasks.filter((task) => {
-      console.log('Task Date:', task.dueDate.toISOString().split('T')[0]);
       return (
         task.dueDate.toISOString().split('T')[0] ===
         date.toISOString().split('T')[0]
