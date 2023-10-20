@@ -7,7 +7,10 @@ interface FilterOptions {
 }
 
 export function filterTaskByStatus(tasks: Task[], status: Status) {
-  return tasks.filter((task) => task.status === status);
+  console.log('filter func tasks ', tasks);
+  const filteredTasks = tasks.filter((task) => task.status == status);
+  console.log('filter func filtered ', filteredTasks);
+  return filteredTasks;
 }
 
 export function filterTaskByPriority(tasks: Task[], priority: Priority) {

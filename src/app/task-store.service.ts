@@ -47,7 +47,6 @@ export class TaskStoreService {
       task.status = newStatus;
       this.updateTask(task);
     }
-    console.log(this.tasks)
   }
 
   updateTaskPriority(taskId: number, newPriority: Priority): void {

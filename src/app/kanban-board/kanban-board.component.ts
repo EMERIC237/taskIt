@@ -14,35 +14,20 @@ export class KanbanBoardComponent implements OnInit, OnDestroy {
   toDoTasks: Task[] = [];
   InProgressTask: Task[] = [];
   DoneTasks: Task[] = [];
-  private subscription = new Subscription();
+  private taskSubs!: Subscription;
 
   constructor(private taskStore: TaskStoreService) {}
 
   ngOnInit(): void {
-    this.subscription.add(
-      this.taskStore.tasksChange$.subscribe((tasks) => {
-        this.allTasks = tasks;
-        this.toDoTasks = filterTaskByStatus(tasks, Status.Todo);
-        this.InProgressTask = filterTaskByStatus(tasks, Status.InProgress);
-        this.DoneTasks = filterTaskByStatus(tasks, Status.Done);
-      })
-    );
-  }
-
-  loadTasks(): void {
-    this.allTasks = this.taskStore.getAllTasks();
-  }
-
-  isTodo(task: Task): boolean {
-    return task.status === Status.Todo;
-  }
-
-  isInProgress(task: Task): boolean {
-    return task.status === Status.InProgress;
-  }
-
-  isDone(task: Task): boolean {
-    return task.status === Status.Done;
+    this.taskSubs = this.taskStore.tasksChange$.subscribe((tasks) => {
+      this.allTasks = tasks;
+      this.toDoTasks = filterTaskByStatus(tasks, Status.Todo);
+      this.InProgressTask = filterTaskByStatus(tasks, Status.InProgress);
+      this.DoneTasks = filterTaskByStatus(tasks, Status.Done);
+      console.log('todo: ', this.toDoTasks);
+      console.log('In progress: ', this.InProgressTask);
+      console.log('Done: ', this.DoneTasks);
+    });
   }
 
   onStatusChange(taskId: number, newStatus: Status) {
@@ -50,6 +35,6 @@ export class KanbanBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.taskSubs.unsubscribe();
   }
 }

@@ -34,18 +34,16 @@ export class TaskListComponent implements OnInit, OnDestroy {
   selectedPriority: string = '';
   selectedDate: string = '';
   uniqueDates: Date[] = [];
-  private taskSubscription = new Subscription();
+  private taskSub!: Subscription;
   @Output() openModalEvent: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private taskStore: TaskStoreService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.taskSubscription.add(
-      this.taskStore.tasksChange$.subscribe((tasks) => {
-        this.allTasks = tasks;
-        this.tasks = [...this.allTasks];
-      })
-    );
+    this.taskSub = this.taskStore.tasksChange$.subscribe((tasks) => {
+      this.allTasks = tasks;
+      this.tasks = [...this.allTasks];
+    });
     this.uniqueDates = this.getUniqueDates();
   }
 
@@ -114,6 +112,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.taskSubscription.unsubscribe();
+    this.taskSub.unsubscribe();
   }
 }

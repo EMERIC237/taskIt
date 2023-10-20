@@ -10,9 +10,9 @@
       (selectionChange)="onStatusChange($event.value)"
       placeholder="{{ task.status }}"
     >
-      <mat-option selected value="to do">To Do</mat-option>
-      <mat-option value="in progress">In Progress</mat-option>
-      <mat-option value="done">Done</mat-option>
+      <mat-option *ngFor="let status of statuses" value="{{ status }}">{{
+        status
+      }}</mat-option>
     </mat-select>
   </div>
 
