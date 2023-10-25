@@ -7,9 +7,7 @@ interface FilterOptions {
 }
 
 export function filterTaskByStatus(tasks: Task[], status: Status) {
-  console.log('filter func tasks ', tasks);
   const filteredTasks = tasks.filter((task) => task.status == status);
-  console.log('filter func filtered ', filteredTasks);
   return filteredTasks;
 }
 

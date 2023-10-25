@@ -21,5 +21,47 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.green-snackbar div {
+  background: rgb(65, 252, 134) !important;
+  color: white !important;
+}
+
+.green-snackbar button {
+  background-color: rgb(65, 252, 134);
+  color: white;
+  border: none;
+}
+
+.red-snackbar div {
+  background: #F44336 !important;
+  color: white !important;
+}
+
+.red-snackbar button {
+  background-color: #F44336;
+  color: white;
+  border: none;
+}
+
+.blue-snackbar div {
+  background: #2196F3 !important;
+  color: white !important;
+}
+
+.blue-snackbar button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+}

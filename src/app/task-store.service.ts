@@ -31,12 +31,11 @@ export class TaskStoreService {
   }
 
   updateTask(updatedTask: Task): void {
-    const index = this.tasks.findIndex(
-      (task) => task.taskId === updatedTask.taskId
+    console.log('being updated id: ', updatedTask.taskId);
+    this.tasks = this.tasks.map((task) =>
+      task.taskId === updatedTask.taskId ? updatedTask : task
     );
-    if (index !== -1) {
-      this.tasks[index] = updatedTask;
-    }
+    console.log('lest tasks: ', this.tasks);
     // push the new changes
     this.tasksChangeSubject.next(this.tasks);
   }

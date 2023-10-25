@@ -9,7 +9,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Task, Priority, Status } from 'src/models/Task';
-import { FormTaskDialogComponent } from '../form-task-dialog/form-task-dialog.component';
+import { FormTaskDialogComponent } from '../components/form-task-dialog/form-task-dialog.component';
 
 @Component({
   selector: 'app-add-task',

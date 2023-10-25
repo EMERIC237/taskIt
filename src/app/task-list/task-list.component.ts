@@ -8,8 +8,16 @@ import {
 import { Priority, Status, Task } from 'src/models/Task';
 import { TaskStoreService } from '../task-store.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FormTaskDialogComponent } from '../form-task-dialog/form-task-dialog.component';
+import { FormTaskDialogComponent } from '../components/form-task-dialog/form-task-dialog.component';
+import { WarningDialogComponent } from '../components/warning-dialog/warning-dialog.component';
 import { Subscription } from 'rxjs';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { ViewTaskDialogComponent } from '../components/view-task-dialog/view-task-dialog.component';
+import { SnackBarComponent } from '../components/snack-bar/snack-bar.component';
 
 @Component({
   selector: 'app-task-list',
@@ -17,6 +25,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit, OnDestroy {
+  horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
   tasks: Task[] = [];
   allTasks: Task[] = [];
   displayedColumns: string[] = [
@@ -37,7 +47,11 @@ export class TaskListComponent implements OnInit, OnDestroy {
   private taskSub!: Subscription;
   @Output() openModalEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private taskStore: TaskStoreService, private dialog: MatDialog) {}
+  constructor(
+    private taskStore: TaskStoreService,
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.taskSub = this.taskStore.tasksChange$.subscribe((tasks) => {
@@ -47,36 +61,63 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.uniqueDates = this.getUniqueDates();
   }
 
-  loadTasks(): void {
-    this.allTasks = this.taskStore.getAllTasks();
-    this.tasks = [...this.allTasks];
+  openSnackBar(message: string, action: string, className: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className],
+    });
   }
-
   onAddNewTask() {
     const dialogRef = this.dialog.open(FormTaskDialogComponent, {
-      data: { selectedTask: null },
+      data: null,
       width: '400px',
     });
 
     dialogRef.afterClosed().subscribe((task: Task) => {
       if (task) {
         this.addNewTask(task);
+        this.openSnackBar('Task added successfully', 'Close', 'green-snackbar');
       }
     });
   }
 
   addNewTask(task: Task) {
     this.taskStore.addTask(task);
-    this.loadTasks();
   }
 
-  onViewTask(taskId: number) {}
+  updateTask(toUpdateTask: Task) {
+    this.taskStore.updateTask(toUpdateTask);
+  }
+  onViewTask(taskId: number) {
+    const dialogRef = this.dialog.open(ViewTaskDialogComponent, {
+      data: this.taskStore.getTaskById(taskId),
+    });
+  }
 
-  onEditTask(taskId: number) {}
+  onEditTask(taskId: number) {
+    const dialogRef = this.dialog.open(FormTaskDialogComponent, {
+      data: this.taskStore.getTaskById(taskId),
+    });
+    dialogRef.afterClosed().subscribe((task: Task) => {
+      if (task) {
+        this.updateTask(task);
+        this.openSnackBar('Task edited successfully', 'Close', 'blue-snackbar');
+      }
+    });
+  }
 
   onDeleteTask(taskId: number): void {
-    this.taskStore.deleteTask(taskId);
-    this.loadTasks();
+    const dialogRef = this.dialog.open(WarningDialogComponent, {
+      data: this.taskStore.getTaskById(taskId),
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmDel: boolean) => {
+      if (confirmDel) {
+        this.taskStore.deleteTask(taskId);
+        this.openSnackBar('Task deleted successfully', 'Close', 'red-snackbar');
+      }
+    });
   }
 
   getUniqueDates(): Date[] {

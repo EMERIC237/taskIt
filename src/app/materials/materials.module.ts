@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const materials = [
   MatButtonModule,
@@ -30,6 +31,7 @@ const materials = [
   MatDialogModule,
   MatNativeDateModule,
   MatProgressSpinnerModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({

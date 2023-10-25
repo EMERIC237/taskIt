@@ -11,15 +11,16 @@ export enum Status {
 }
 
 export class Task {
-  static id = 0;
-  public taskId: number;
+  static id = 1;
 
   constructor(
     public title: string,
     public dueDate: Date,
     public priority: Priority,
-    public status: Status
+    public status: Status,
+    public description?: string,
+    public taskId?: number
   ) {
-    this.taskId = Task.id++;
+    this.taskId = taskId ? taskId : Task.id++;
   }
 }

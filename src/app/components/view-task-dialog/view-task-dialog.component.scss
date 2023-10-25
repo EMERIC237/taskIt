@@ -1,0 +1,41 @@
+.task-card {
+  width: 350px;
+  margin: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+mat-card-header {
+  background-color: #f0f0f0;
+}
+
+.task-icon,
+.date-icon,
+.priority-icon,
+.status-icon,
+.description-icon {
+  vertical-align: bottom;
+  margin-right: 8px;
+}
+
+.priority-icon {
+  &.low {
+    color: green;
+  }
+
+  &.medium {
+    color: orange;
+  }
+
+  &.high {
+    color: red;
+  }
+}
+
+.status-icon {
+  color: #2196f3;
+}
+
+.description-icon {
+  color: #9c27b0;
+}

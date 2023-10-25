@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" style="background-color: green;">
+<mat-toolbar color="primary" style="background-color: green">
   <span>Task List</span>
 </mat-toolbar>
 
@@ -90,7 +90,12 @@
       <button mat-icon-button color="primary" (click)="onEditTask(task.taskId)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button type="submit" mat-icon-button color="warn" (click)="onDeleteTask(task.taskId)">
+      <button
+        type="submit"
+        mat-icon-button
+        color="warn"
+        (click)="onDeleteTask(task.taskId)"
+      >
         <mat-icon>delete</mat-icon>
       </button>
     </mat-cell>
@@ -101,10 +106,10 @@
     <button mat-icon-button color="primary" (click)="onViewTask(task.taskId)">
       <mat-icon>visibility</mat-icon>
     </button>
-    <button mat-icon-button color="primary" (click)="onViewTask(task.taskId)">
+    <button mat-icon-button color="primary" (click)="onEditTask(task.taskId)">
       <mat-icon>edit</mat-icon>
     </button>
-    <button mat-icon-button color="primary" (click)="onViewTask(task.taskId)">
+    <button mat-icon-button color="warn" (click)="onDeleteTask(task.taskId)">
       <mat-icon>delete</mat-icon>
     </button>
   </mat-row>

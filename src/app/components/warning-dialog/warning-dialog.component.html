@@ -1,0 +1,27 @@
+<div class="modal-container justify-content-center align-items-center">
+  <div class="modal-header">
+    <h1>Warning</h1>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this task?</p>
+    <p class="task-title">'{{ task?.title }}'</p>
+  </div>
+  <div class="modal-footer d-flex justify-content-center">
+    <button
+      mat-raised-button
+      class="confirm-btn"
+      color="primary"
+      (click)="dialogRef.close(true)"
+    >
+      Yes
+    </button>
+    <button
+      mat-raised-button
+      class="cancel-btn"
+      color="warn"
+      (click)="dialogRef.close(false)"
+    >
+      No
+    </button>
+  </div>
+</div>

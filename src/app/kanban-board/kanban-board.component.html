@@ -4,39 +4,67 @@
 
 <div
   class="d-flex gap-5 flex-row h-100 vh-80 justify-content-center align-items-center"
+  cdkDropListGroup
 >
   <mat-card class="card-board">
     <mat-card-title>To do</mat-card-title>
-    <mat-card-content>
+    <mat-card-content
+      cdkDropList
+      id="todoList"
+      [cdkDropListData]="toDoTasks"
+      [cdkDropListConnectedTo]="['inProgressList', 'doneList']"
+      (cdkDropListDropped)="drop($event)"
+    >
       <ng-container *ngFor="let task of toDoTasks; let i = index">
         <app-task-card
           [task]="task"
-          (statusChanged)="onStatusChange(task.taskId, $event)"
-        ></app-task-card>
+          (statusChanged)="onStatusChange(task.taskId!, $event)"
+          cdkDrag
+          [cdkDragData]="task"
+        >
+        </app-task-card>
       </ng-container>
     </mat-card-content>
   </mat-card>
 
   <mat-card class="card-board">
     <mat-card-title>In progress</mat-card-title>
-    <mat-card-content>
-      <ng-container *ngFor="let task of InProgressTask; let i = index">
+    <mat-card-content
+      cdkDropList
+      id="inProgressList"
+      [cdkDropListData]="inProgressTasks"
+      [cdkDropListConnectedTo]="['todoList', 'doneList']"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <ng-container *ngFor="let task of inProgressTasks; let i = index">
         <app-task-card
           [task]="task"
-          (statusChanged)="onStatusChange(task.taskId, $event)"
-        ></app-task-card>
+          (statusChanged)="onStatusChange(task.taskId!, $event)"
+          [cdkDragData]="task"
+          cdkDrag
+        >
+        </app-task-card>
       </ng-container>
     </mat-card-content>
   </mat-card>
 
   <mat-card class="card-board">
     <mat-card-title>Done</mat-card-title>
-    <mat-card-content>
-      <ng-container *ngFor="let task of DoneTasks; let i = index">
+    <mat-card-content
+      cdkDropList
+      id="doneList"
+      [cdkDropListData]="doneTasks"
+      [cdkDropListConnectedTo]="['todoList', 'inProgressList']"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <ng-container *ngFor="let task of doneTasks; let i = index">
         <app-task-card
           [task]="task"
-          (statusChanged)="onStatusChange(task.taskId, $event)"
-        ></app-task-card>
+          (statusChanged)="onStatusChange(task.taskId!, $event)"
+          cdkDrag
+          [cdkDragData]="task"
+        >
+        </app-task-card>
       </ng-container>
     </mat-card-content>
   </mat-card>

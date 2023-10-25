@@ -5,8 +5,25 @@
     <mat-form-field>
       <mat-label>Task Title</mat-label>
       <input matInput formControlName="taskTitle" />
-      <mat-error *ngIf="formGroup.get('taskTitle')?.invalid && formGroup.get('taskTitle')?.touched">
+      <mat-error
+        *ngIf="
+          formGroup.get('taskTitle')?.invalid &&
+          formGroup.get('taskTitle')?.touched
+        "
+      >
         Task Title is required.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Task Description</mat-label>
+      <input matInput formControlName="taskDescription" />
+      <mat-error
+        *ngIf="
+          formGroup.get('taskDescription')?.invalid &&
+          formGroup.get('taskDescription')?.touched
+        "
+      >
+        Task Description is required.
       </mat-error>
     </mat-form-field>
 
@@ -15,7 +32,11 @@
       <input matInput [matDatepicker]="picker" formControlName="dueDate" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="formGroup.get('dueDate')?.invalid && formGroup.get('dueDate')?.touched">
+      <mat-error
+        *ngIf="
+          formGroup.get('dueDate')?.invalid && formGroup.get('dueDate')?.touched
+        "
+      >
         Due Date is required.
       </mat-error>
     </mat-form-field>
@@ -23,11 +44,18 @@
     <mat-form-field>
       <mat-label>Priority</mat-label>
       <mat-select formControlName="taskPriority">
-        <mat-option value="High">High</mat-option>
-        <mat-option value="Medium">Medium</mat-option>
-        <mat-option value="Low">Low</mat-option>
+        <mat-option
+          *ngFor="let priority of priorities"
+          value="{{ priority }}"
+          >{{ priority }}</mat-option
+        >
       </mat-select>
-      <mat-error *ngIf="formGroup.get('taskPriority')?.invalid && formGroup.get('taskPriority')?.touched">
+      <mat-error
+        *ngIf="
+          formGroup.get('taskPriority')?.invalid &&
+          formGroup.get('taskPriority')?.touched
+        "
+      >
         Priority is required.
       </mat-error>
     </mat-form-field>
@@ -35,11 +63,16 @@
     <mat-form-field>
       <mat-label>Status</mat-label>
       <mat-select formControlName="taskStatus">
-        <mat-option value="to do">To Do</mat-option>
-        <mat-option value="in progress">In Progress</mat-option>
-        <mat-option value="done">Done</mat-option>
+        <mat-option *ngFor="let status of statuses" value="{{ status }}">{{
+          status
+        }}</mat-option>
       </mat-select>
-      <mat-error *ngIf="formGroup.get('taskStatus')?.invalid && formGroup.get('taskStatus')?.touched">
+      <mat-error
+        *ngIf="
+          formGroup.get('taskStatus')?.invalid &&
+          formGroup.get('taskStatus')?.touched
+        "
+      >
         Status is required.
       </mat-error>
     </mat-form-field>
