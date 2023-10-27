@@ -1,0 +1,53 @@
+.login-card {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.forgot-password-text {
+  margin: 0;
+}
+
+.forgot-password-link,
+.signup-link {
+  color: #3f51b5;
+  /* Angular Material Primary Color */
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-button {
+  width: 150px;
+}
+
+.signup-text {
+  margin-top: 20px;
+}
+
+/* For larger screens */
+@media (min-width: 768px) {
+  .login-card {
+    padding: 40px 60px;
+  }
+}

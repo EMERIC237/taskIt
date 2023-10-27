@@ -1,1 +1,21 @@
-<p>landing-page works!</p>
+<section class="landing-page">
+  <h1>Welcome to <span class="highlighted-text">TASK</span>IT</h1>
+  <p class="intro-text">
+    This platform allows you to keep track of tasks professionally,
+    domestically, and more. Sign up today to get to work!
+  </p>
+  <div class="image-container">
+    <img src="assets/images/TaskIt.png" alt="task it image" />
+  </div>
+  <div class="cta-container">
+    <p>Create an account to get started today.</p>
+    <div class="button-group">
+      <button mat-raised-button class="cta-button" [routerLink]="['/signup']">
+        Sign Up
+      </button>
+      <button mat-stroked-button class="cta-button" [routerLink]="['/login']">
+        Login
+      </button>
+    </div>
+  </div>
+</section>

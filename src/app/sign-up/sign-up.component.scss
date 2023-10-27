@@ -1,0 +1,48 @@
+.signup-card {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.login-text {
+  margin: 0;
+}
+
+.login-link {
+  color: #3f51b5;
+  /* Angular Material Primary Color */
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.signup-button {
+  width: 150px;
+}
+
+/* For larger screens */
+@media (min-width: 768px) {
+  .signup-card {
+    padding: 40px 60px;
+  }
+}
