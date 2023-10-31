@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { WarningDialogComponent } from './components/warning-dialog/warning-dialog.component';
 import { ViewTaskDialogComponent } from './components/view-task-dialog/view-task-dialog.component';
 import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
     WarningDialogComponent,
     ViewTaskDialogComponent,
     SnackBarComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
