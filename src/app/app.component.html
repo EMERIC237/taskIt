@@ -1,8 +1,14 @@
-<mat-sidenav-container class="h-100 vh-100">
-  <mat-sidenav #sidenav mode="side" opened class="bg-light">
+<mat-sidenav-container class="full-height">
+  <mat-sidenav #sidenav [mode]="getHandsetMode(isHandse$ | async)" opened>
+    <button *ngIf="isHandse$ | async" mat-icon-button (click)="sidenav.close()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
     <app-side-bar></app-side-bar>
   </mat-sidenav>
-  <mat-sidenav-content class="p-5 d-flex flex-column">
+  <mat-sidenav-content class="content-padding">
+    <button mat-icon-button (click)="toggleSidenav()" *ngIf="isHandse$ | async">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

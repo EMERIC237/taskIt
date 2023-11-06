@@ -2,24 +2,71 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
 import { mockTasks } from './data/taskStoreData';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskStoreService {
+  firebaseRootURL = '/api';
   private tasks: Task[] = [...mockTasks];
   private tasksChangeSubject: BehaviorSubject<Task[]> = new BehaviorSubject<
     Task[]
   >(this.tasks);
+
+  constructor(private http: HttpClient) {
+    this.fetchTasksFromFirebase();
+  }
+
+  private fetchTasksFromFirebase(): void {
+    this.http.get<Task[]>(this.firebaseRootURL).subscribe({
+      next: (res) => {
+        this.tasks = res;
+        this.tasksChangeSubject.next(this.tasks);
+      },
+      error: (err) => console.error('Error fetching tasks', err),
+    });
+  }
 
   get tasksChange$() {
     return this.tasksChangeSubject.asObservable();
   }
 
   addTask(task: Task): void {
-    this.tasks.push(task);
-    // push the new changes
-    this.tasksChangeSubject.next(this.tasks);
+    this.http.post<Task>(`${this.firebaseRootURL}`, task).subscribe({
+      next: (res) => {
+        this.tasks.push(res); // Push the returned task, which includes the unique identifier from Firebase
+        this.tasksChangeSubject.next(this.tasks);
+      },
+      error: (err) => console.error('Error adding task', err),
+    });
+  }
+
+  updateTask(updatedTask: Task): void {
+    this.http
+      .put<Task>(`${this.firebaseRootURL}/${updatedTask.taskId}`, updatedTask)
+      .subscribe({
+        next: (res) => {
+          const index = this.tasks.findIndex(
+            (task) => task.taskId === updatedTask.taskId
+          );
+          if (index !== -1) {
+            this.tasks[index] = res; // Update the task with the returned updated task
+            this.tasksChangeSubject.next(this.tasks);
+          }
+        },
+        error: (err) => console.error('Error updating the task', err),
+      });
+  }
+
+  deleteTask(taskId: number): void {
+    this.http.delete(`${this.firebaseRootURL}/${taskId}`).subscribe({
+      next: () => {
+        this.tasks = this.tasks.filter((task) => task.taskId !== taskId);
+        this.tasksChangeSubject.next(this.tasks);
+      },
+      error: (err) => console.error('Error deleting task', err),
+    });
   }
 
   getAllTasks(): Task[] {
@@ -28,16 +75,6 @@ export class TaskStoreService {
 
   getTaskById(id: number): Task | undefined {
     return this.tasks.find((task) => task.taskId === id);
-  }
-
-  updateTask(updatedTask: Task): void {
-    console.log('being updated id: ', updatedTask.taskId);
-    this.tasks = this.tasks.map((task) =>
-      task.taskId === updatedTask.taskId ? updatedTask : task
-    );
-    console.log('lest tasks: ', this.tasks);
-    // push the new changes
-    this.tasksChangeSubject.next(this.tasks);
   }
 
   updateTaskStatus(taskId: number, newStatus: Status): void {
@@ -54,16 +91,6 @@ export class TaskStoreService {
       task.priority = newPriority;
       this.updateTask(task);
     }
-  }
-
-  deleteTask(taskId: number): void {
-    const index = this.tasks.findIndex((task) => task.taskId === taskId);
-    if (index !== -1) {
-      this.tasks.splice(index, 1);
-    }
-
-    // push the new changes
-    this.tasksChangeSubject.next(this.tasks);
   }
 
   getAllUniqueStatuses(): Status[] {

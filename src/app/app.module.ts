@@ -20,6 +20,8 @@ import { WarningDialogComponent } from './components/warning-dialog/warning-dial
 import { ViewTaskDialogComponent } from './components/view-task-dialog/view-task-dialog.component';
 import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
 import { ProfileComponent } from './profile/profile.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -41,11 +43,13 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MaterialsModule,
     DragDropModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    FlexLayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

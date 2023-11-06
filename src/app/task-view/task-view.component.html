@@ -1,31 +1,16 @@
-<div
-  class="modal fade"
-  id="viewTaskModal"
-  tabindex="-1"
-  aria-labelledby="viewTaskModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="viewTaskModalLabel">
-          Here is you task
-        </h1>
-        <button
-          type="button"
-          class="btn-close"
-          (click)="closeModal()"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">...</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn btn-primary">Edit</button>
-      </div>
-    </div>
+<mat-dialog-content>
+  <h2 matDialogTitle>{{ task.title }}</h2>
+
+  <!-- Modal content goes here -->
+  <div class="modal-body-content">
+    <p><strong>Due Date:</strong> {{ task.dueDate | date }}</p>
+    <p><strong>Priority:</strong> {{ task.priority }}</p>
+    <p><strong>Status:</strong> {{ task.status }}</p>
+    <p><strong>Description:</strong> {{ task.description }}</p>
   </div>
-</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button>Close</button>
+  <button mat-raised-button color="primary">Edit</button>
+</mat-dialog-actions>

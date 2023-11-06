@@ -1,10 +1,11 @@
 <div class="sideBarContainer">
-  <div class="m-4">
-    <h1><span class="text-success">TASK</span>IT</h1>
-    <div class="d-flex flex-column gap-2">
+  <div class="menu-section">
+    <h1><span class="highlight-text">TASK</span>IT</h1>
+    <div class="menu-buttons">
       <button
+        mat-button
         #btn="routerLinkActive"
-        [ngClass]="btn.isActive ? 'btn btn-success' : 'btn btn-light'"
+        [ngClass]="btn.isActive ? 'active' : ''"
         routerLink="/task-list"
         routerLinkActive
         (click)="gotoTask()"
@@ -12,8 +13,9 @@
         Task List
       </button>
       <button
+        mat-button
         #btn2="routerLinkActive"
-        [ngClass]="btn2.isActive ? 'btn btn-success' : 'btn btn-light'"
+        [ngClass]="btn2.isActive ? 'active' : ''"
         routerLink="/kanban-board"
         routerLinkActive
         (click)="gotoKanban()"
@@ -22,17 +24,17 @@
       </button>
     </div>
   </div>
-  <div class="d-flex align-items-center border-top border-2">
+  <div class="profile-section">
     <img
       src="http://source.unsplash.com/50x50/?profile"
       alt="profile picture"
-      class="img-fluid rounded-circle mr-3"
+      class="profile-img"
     />
-    <div class="d-flex flex-column mr-3">
+    <div class="profile-info">
       <span>Monkey D NFT</span>
       <span>email@example.com</span>
     </div>
-    <div>
+    <div class="icon-section">
       <span class="material-symbols-outlined"> move_item </span>
     </div>
   </div>

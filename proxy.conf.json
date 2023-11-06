@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "https://taskit-9cbdc-default-rtdb.firebaseio.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {"^/api": ""}
+  }
+}

@@ -1,10 +1,50 @@
-table {
+.full-width-table {
   width: 100%;
 }
 
-.action-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.action-card {
+  .mat-card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
+/* Responsive styles for mobile devices */
+@media (max-width: 600px) {
+  .action-card {
+    .mat-card-content {
+      flex-direction: column;
+      align-items: stretch;
+      /* Make sure items stretch to full width */
+
+      /* Reduce the gap size on smaller screens */
+      gap: 10px;
+    }
+  }
+
+  .full-width-table {
+    overflow-x: auto;
+    /* Allow horizontal scrolling on small screens */
+  }
+
+  /* Adjust the table layout or cell visibility for mobile */
+  table mat-table {
+
+    // Hide less important columns on small screens
+    .mat-column-priority,
+    .mat-column-status,
+    .mat-column-actions {
+      display: none;
+    }
+  }
+
+  /* Show 'delete' button on mobile */
+  .mat-column-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
