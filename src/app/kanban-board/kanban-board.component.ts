@@ -36,7 +36,7 @@ export class KanbanBoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  onStatusChange(taskId: number, newStatus: Status) {
+  onStatusChange(taskId: string, newStatus: Status) {
     this.taskStore.updateTaskStatus(taskId, newStatus);
   }
 

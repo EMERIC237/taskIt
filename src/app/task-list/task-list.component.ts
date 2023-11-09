@@ -56,9 +56,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.taskSub = this.taskStore.tasksChange$.subscribe((tasks) => {
       this.allTasks = tasks;
-      this.tasks = [...this.allTasks];
+      if (this.allTasks != null) this.tasks = [...this.allTasks];
     });
     this.uniqueDates = this.getUniqueDates();
+
   }
 
   openSnackBar(message: string, action: string, className: string) {
@@ -88,13 +89,13 @@ export class TaskListComponent implements OnInit, OnDestroy {
   updateTask(toUpdateTask: Task) {
     this.taskStore.updateTask(toUpdateTask);
   }
-  onViewTask(taskId: number) {
+  onViewTask(taskId: string) {
     const dialogRef = this.dialog.open(ViewTaskDialogComponent, {
       data: this.taskStore.getTaskById(taskId),
     });
   }
 
-  onEditTask(taskId: number) {
+  onEditTask(taskId: string) {
     const dialogRef = this.dialog.open(FormTaskDialogComponent, {
       data: this.taskStore.getTaskById(taskId),
     });
@@ -106,7 +107,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDeleteTask(taskId: number): void {
+  onDeleteTask(taskId: string): void {
     const dialogRef = this.dialog.open(WarningDialogComponent, {
       data: this.taskStore.getTaskById(taskId),
       width: '400px',

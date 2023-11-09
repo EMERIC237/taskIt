@@ -3,25 +3,35 @@
     <h1>Welcome to TASKIT!</h1>
     <p>Sign up to get things done.</p>
   </mat-card-title>
-  <form class="signup-form">
+  <form
+    class="signup-form"
+    #signUpFrom="ngForm"
+    (ngSubmit)="onSignUp(signUpFrom)"
+  >
     <mat-form-field appearance="outline">
       <mat-label>First Name</mat-label>
-      <input matInput placeholder="John" />
+      <input matInput placeholder="John" name="firstName" ngModel />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Last Name</mat-label>
-      <input matInput placeholder="Doe" />
+      <input matInput placeholder="Doe" name="lastName" ngModel />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input type="email" matInput placeholder="john.doe@example.com" />
+      <input
+        type="email"
+        matInput
+        placeholder="john.doe@example.com"
+        name="email"
+        ngModel
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
-      <input type="password" matInput />
+      <input type="password" matInput name="password" ngModel />
       <mat-hint>Minimum 8 characters</mat-hint>
     </mat-form-field>
 

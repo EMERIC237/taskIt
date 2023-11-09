@@ -1,15 +1,18 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
-import { mockTasks } from './data/taskStoreData';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+interface taskApi {
+  name: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskStoreService {
-  firebaseRootURL = '/api';
-  private tasks: Task[] = [...mockTasks];
+  firebaseRootURL = 'https://taskit-9cbdc-default-rtdb.firebaseio.com';
+
+  private tasks: Task[] = [];
   private tasksChangeSubject: BehaviorSubject<Task[]> = new BehaviorSubject<
     Task[]
   >(this.tasks);
@@ -19,9 +22,13 @@ export class TaskStoreService {
   }
 
   private fetchTasksFromFirebase(): void {
-    this.http.get<Task[]>(this.firebaseRootURL).subscribe({
+    this.http.get<Task[]>(this.firebaseRootURL + '/task.json').subscribe({
       next: (res) => {
-        this.tasks = res;
+        for (const taskKey in res) {
+          const currTask = res[taskKey];
+          currTask.taskId = taskKey;
+          this.tasks.push(res[taskKey]);
+        }
         this.tasksChangeSubject.next(this.tasks);
       },
       error: (err) => console.error('Error fetching tasks', err),
@@ -33,25 +40,31 @@ export class TaskStoreService {
   }
 
   addTask(task: Task): void {
-    this.http.post<Task>(`${this.firebaseRootURL}`, task).subscribe({
-      next: (res) => {
-        this.tasks.push(res); // Push the returned task, which includes the unique identifier from Firebase
-        this.tasksChangeSubject.next(this.tasks);
-      },
-      error: (err) => console.error('Error adding task', err),
-    });
+    this.http
+      .post<taskApi>(`${this.firebaseRootURL}/task.json`, task)
+      .subscribe({
+        next: (res) => {
+          task.taskId = res.name;
+          this.tasks.push(task);
+          this.tasksChangeSubject.next(this.tasks);
+        },
+        error: (err) => console.error('Error adding task', err),
+      });
   }
 
   updateTask(updatedTask: Task): void {
     this.http
-      .put<Task>(`${this.firebaseRootURL}/${updatedTask.taskId}`, updatedTask)
+      .put<Task>(
+        `${this.firebaseRootURL}/task/${updatedTask.taskId}.json`,
+        updatedTask
+      )
       .subscribe({
         next: (res) => {
           const index = this.tasks.findIndex(
             (task) => task.taskId === updatedTask.taskId
           );
           if (index !== -1) {
-            this.tasks[index] = res; // Update the task with the returned updated task
+            this.tasks[index] = res;
             this.tasksChangeSubject.next(this.tasks);
           }
         },
@@ -59,10 +72,11 @@ export class TaskStoreService {
       });
   }
 
-  deleteTask(taskId: number): void {
-    this.http.delete(`${this.firebaseRootURL}/${taskId}`).subscribe({
-      next: () => {
-        this.tasks = this.tasks.filter((task) => task.taskId !== taskId);
+  deleteTask(taskId: string): void {
+    this.http.delete(`${this.firebaseRootURL}/task/${taskId}.json`).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.tasks = this.tasks.filter((task) => task.taskId != taskId);
         this.tasksChangeSubject.next(this.tasks);
       },
       error: (err) => console.error('Error deleting task', err),
@@ -73,11 +87,11 @@ export class TaskStoreService {
     return this.tasks;
   }
 
-  getTaskById(id: number): Task | undefined {
+  getTaskById(id: string): Task | undefined {
     return this.tasks.find((task) => task.taskId === id);
   }
 
-  updateTaskStatus(taskId: number, newStatus: Status): void {
+  updateTaskStatus(taskId: string, newStatus: Status): void {
     const task = this.getTaskById(taskId);
     if (task) {
       task.status = newStatus;
@@ -85,7 +99,7 @@ export class TaskStoreService {
     }
   }
 
-  updateTaskPriority(taskId: number, newPriority: Priority): void {
+  updateTaskPriority(taskId: string, newPriority: Priority): void {
     const task = this.getTaskById(taskId);
     if (task) {
       task.priority = newPriority;

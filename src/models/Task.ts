@@ -19,8 +19,6 @@ export class Task {
     public priority: Priority,
     public status: Status,
     public description?: string,
-    public taskId?: number
-  ) {
-    this.taskId = taskId ? taskId : Task.id++;
-  }
+    public taskId?: string
+  ) {}
 }

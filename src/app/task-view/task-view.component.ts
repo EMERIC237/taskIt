@@ -21,7 +21,7 @@ export class TaskViewComponent {
     );
   }
 
-  showModalView(taskId: number): void {
+  showModalView(taskId: string): void {
     const currTask = this.taskStore.getTaskById(taskId);
     this.task = currTask!;
     if (currTask) {
@@ -30,7 +30,6 @@ export class TaskViewComponent {
       //   data: { task: currTask }
       // });
       // dialogRef.afterClosed().subscribe(result => {
-      //   console.log('The dialog was closed');
       //   // You can handle any returned data or actions here if needed
       // });
     }

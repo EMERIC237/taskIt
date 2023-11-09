@@ -6,15 +6,15 @@
       Enter your email to reset your password.
     </p>
   </mat-card-title>
-  <form class="login-form" *ngIf="!showResetPasswordForm">
+  <form class="login-form" *ngIf="!showResetPasswordForm" #loginFormRef="ngForm" (ngSubmit)="onLogin(loginFormRef)">
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input type="email" matInput placeholder="john.doe@example.com" />
+      <input type="email" matInput placeholder="john.doe@example.com" name="email" ngModel/>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
-      <input type="password" matInput />
+      <input type="password" matInput name="password" ngModel/>
     </mat-form-field>
 
     <div class="action-container">
@@ -39,7 +39,7 @@
   <form class="reset-password-form" *ngIf="showResetPasswordForm">
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input type="email" matInput placeholder="john.doe@example.com" />
+      <input type="email" matInput placeholder="john.doe@example.com" name="email" ngModel/>
     </mat-form-field>
 
     <div class="action-container">
