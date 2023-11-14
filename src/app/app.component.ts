@@ -1,19 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { Task } from 'src/models/Task';
 import { TaskListComponent } from './task-list/task-list.component';
 import { Observable, shareReplay, map, startWith } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+  isAuthenticated = false;
+
   title = 'taskIt';
-  isHandse$: Observable<boolean> = this.breakpointObserver
+  isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(
       map((result) => result.matches),
@@ -25,9 +28,18 @@ export class AppComponent {
   @ViewChild(TaskListComponent) taskListComponent!: TaskListComponent;
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private authService: AuthService
+  ) {}
   openAddTaskModal() {
     this.addTaskComponent.openModal();
+  }
+
+  ngOnInit(): void {
+    this.authService.currentUser.subscribe((user) => {
+      this.isAuthenticated = !!user;
+    });
   }
   toggleSidenav() {
     this.sidenav.toggle();
@@ -37,7 +49,11 @@ export class AppComponent {
     this.taskListComponent.addNewTask(task);
   }
 
-  getHandsetMode(isHandset: boolean | null): MatDrawerMode {
-    return isHandset === true ? 'over' : 'side';
+  getHandsetMode(isHandsett: boolean | null): MatDrawerMode {
+    return isHandsett === true ? 'over' : 'side';
+  }
+
+  ngOnDestroy(): void {
+    this.authService.currentUser.unsubscribe();
   }
 }
