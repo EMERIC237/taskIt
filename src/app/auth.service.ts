@@ -18,6 +18,7 @@ const SIGN_UP_URL =
   'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
 const SIGN_IN_URL =
   'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+
 export interface AuthResponseData {
   // For Sign In Only
   registered?: boolean;
@@ -27,6 +28,7 @@ export interface AuthResponseData {
 })
 export class AuthService {
   currentUser = new BehaviorSubject<AuthUser | null>(null);
+  userToken = '';
   constructor(private http: HttpClient) {}
 
   signUp(email: string, password: string) {
@@ -62,6 +64,7 @@ export class AuthService {
     // Save the new user in localStorage
     localStorage.setItem('userData', JSON.stringify(formUser));
   }
+
 
   isAuthenticated(): boolean {
     // check if a token exists in local storage

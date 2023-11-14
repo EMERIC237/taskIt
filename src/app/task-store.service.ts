@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
-import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, exhaustMap, take, tap, switchMap, Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { AuthService } from './auth.service';
 interface taskApi {
   name: string;
 }
@@ -17,66 +18,62 @@ export class TaskStoreService {
     Task[]
   >(this.tasks);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
     this.fetchTasksFromFirebase();
   }
-
   private fetchTasksFromFirebase(): void {
-    this.http.get<Task[]>(this.firebaseRootURL + '/task.json').subscribe({
-      next: (res) => {
-        for (const taskKey in res) {
-          const currTask = res[taskKey];
-          currTask.taskId = taskKey;
-          this.tasks.push(res[taskKey]);
+    this.authService.currentUser.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return [];
         }
-        this.tasksChangeSubject.next(this.tasks);
-      },
+
+        const params = new HttpParams().set('auth', user.token!);
+        return this.http.get<{ [key: string]: Task }>(`${this.firebaseRootURL}/task.json`, { params });
+      }),
+      tap((tasks) => this.updateTasks(tasks))
+    ).subscribe({
       error: (err) => console.error('Error fetching tasks', err),
     });
   }
 
-  get tasksChange$() {
+  private updateTasks(response: { [key: string]: Task }): void {
+    this.tasks = Object.entries(response).map(([taskId, task]) => ({ ...task, taskId }));
+    this.tasksChangeSubject.next(this.tasks);
+  }
+
+  get tasksChange$(): Observable<Task[]> {
     return this.tasksChangeSubject.asObservable();
   }
 
   addTask(task: Task): void {
-    this.http
-      .post<taskApi>(`${this.firebaseRootURL}/task.json`, task)
-      .subscribe({
-        next: (res) => {
-          task.taskId = res.name;
-          this.tasks.push(task);
-          this.tasksChangeSubject.next(this.tasks);
-        },
-        error: (err) => console.error('Error adding task', err),
-      });
+    this.http.post(`${this.firebaseRootURL}/task.json`, task).subscribe({
+      next: (res) => {
+        task.taskId = res.name;
+        this.tasks.push(task);
+        this.tasksChangeSubject.next(this.tasks);
+      },
+      error: (err) => console.error('Error adding task', err),
+    });
   }
 
   updateTask(updatedTask: Task): void {
-    this.http
-      .put<Task>(
-        `${this.firebaseRootURL}/task/${updatedTask.taskId}.json`,
-        updatedTask
-      )
-      .subscribe({
-        next: (res) => {
-          const index = this.tasks.findIndex(
-            (task) => task.taskId === updatedTask.taskId
-          );
-          if (index !== -1) {
-            this.tasks[index] = res;
-            this.tasksChangeSubject.next(this.tasks);
-          }
-        },
-        error: (err) => console.error('Error updating the task', err),
-      });
+    this.http.put<Task>(`${this.firebaseRootURL}/task/${updatedTask.taskId}.json`, updatedTask).subscribe({
+      next: (res) => {
+        const index = this.tasks.findIndex((task) => task.taskId === updatedTask.taskId);
+        if (index !== -1) {
+          this.tasks[index] = res;
+          this.tasksChangeSubject.next(this.tasks);
+        }
+      },
+      error: (err) => console.error('Error updating the task', err),
+    });
   }
 
   deleteTask(taskId: string): void {
     this.http.delete(`${this.firebaseRootURL}/task/${taskId}.json`).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.tasks = this.tasks.filter((task) => task.taskId != taskId);
+      next: () => {
+        this.tasks = this.tasks.filter((task) => task.taskId !== taskId);
         this.tasksChangeSubject.next(this.tasks);
       },
       error: (err) => console.error('Error deleting task', err),
@@ -86,6 +83,8 @@ export class TaskStoreService {
   getAllTasks(): Task[] {
     return this.tasks;
   }
+
+
 
   getTaskById(id: string): Task | undefined {
     return this.tasks.find((task) => task.taskId === id);

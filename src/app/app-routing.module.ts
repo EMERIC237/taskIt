@@ -5,14 +5,24 @@ import { KanbanBoardComponent } from './kanban-board/kanban-board.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { authGuard } from './shared/auth.guard';
+import { appRoutes } from './data/routes';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: LandingPageComponent },
-  { path: 'task-list', component: TaskListComponent },
-  { path: 'signup', component: SignUpComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'kanban-board', component: KanbanBoardComponent },
+  { path: appRoutes.home, component: LandingPageComponent },
+  { path: appRoutes.signup, component: SignUpComponent },
+  { path: appRoutes.login, component: LoginComponent },
+  {
+    path: appRoutes.taskList,
+    component: TaskListComponent,
+    // canActivate: [authGuard],
+  },
+  {
+    path: appRoutes.kanbanBoard,
+    component: KanbanBoardComponent,
+    // canActivate: [authGuard],
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+import { appRoutes } from '../data/routes';
 
 @Component({
   selector: 'app-sign-up',
@@ -8,7 +10,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
   onSignUp(formObj: NgForm) {
     if (!formObj.valid) return;
     const { email, password } = formObj.value;
@@ -21,7 +23,7 @@ export class SignUpComponent {
         console.log('signup failed: ', err);
       }
     );
-
+    this.router.navigateByUrl(appRoutes.taskList);
     formObj.reset();
   }
 }
