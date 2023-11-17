@@ -23,13 +23,22 @@ export interface AuthResponseData {
   // For Sign In Only
   registered?: boolean;
 }
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   currentUser = new BehaviorSubject<AuthUser | null>(null);
   userToken = '';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      console.log(userData);
+      this.currentUser.next(userData);
+    }
+  }
 
   signUp(email: string, password: string) {
     return this.http
@@ -47,12 +56,20 @@ export class AuthService {
   }
 
   signIn(email: string, password: string) {
-    return this.http.post<AuthResponseData>(SIGN_IN_URL + AUTH_API_KEY, {
-      email,
-      password,
-      returnSecureToken: true,
-    });
+    return this.http
+      .post<AuthResponseData>(SIGN_IN_URL + AUTH_API_KEY, {
+        email,
+        password,
+        returnSecureToken: true,
+      })
+      .pipe(
+        tap((res) => {
+          const { email, localId, idToken, expiresIn } = res;
+          this.handleAuth(email, localId, idToken, +expiresIn);
+        })
+      );
   }
+
   handleAuth(email: string, userId: string, token: string, expiresIn: number) {
     // Create Expiration Date for Token
     const expDate = new Date(new Date().getTime() + expiresIn * 1000);
@@ -64,7 +81,6 @@ export class AuthService {
     // Save the new user in localStorage
     localStorage.setItem('userData', JSON.stringify(formUser));
   }
-
 
   isAuthenticated(): boolean {
     // check if a token exists in local storage

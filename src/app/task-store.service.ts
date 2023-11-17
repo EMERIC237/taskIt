@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Priority, Status, Task } from 'src/models/Task';
-import { BehaviorSubject, exhaustMap, take, tap, switchMap, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  exhaustMap,
+  take,
+  tap,
+  switchMap,
+  Observable,
+} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from './auth.service';
 interface taskApi {
@@ -18,27 +25,28 @@ export class TaskStoreService {
     Task[]
   >(this.tasks);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient) {
     this.fetchTasksFromFirebase();
   }
   private fetchTasksFromFirebase(): void {
-    this.authService.currentUser.pipe(
-      switchMap((user) => {
-        if (!user) {
-          return [];
+    this.http.get<Task[]>(this.firebaseRootURL + '/task.json').subscribe({
+      next: (res) => {
+        for (const taskKey in res) {
+          const currTask = res[taskKey];
+          currTask.taskId = taskKey;
+          this.tasks.push(res[taskKey]);
         }
-
-        const params = new HttpParams().set('auth', user.token!);
-        return this.http.get<{ [key: string]: Task }>(`${this.firebaseRootURL}/task.json`, { params });
-      }),
-      tap((tasks) => this.updateTasks(tasks))
-    ).subscribe({
+        this.tasksChangeSubject.next(this.tasks);
+      },
       error: (err) => console.error('Error fetching tasks', err),
     });
   }
 
   private updateTasks(response: { [key: string]: Task }): void {
-    this.tasks = Object.entries(response).map(([taskId, task]) => ({ ...task, taskId }));
+    this.tasks = Object.entries(response).map(([taskId, task]) => ({
+      ...task,
+      taskId,
+    }));
     this.tasksChangeSubject.next(this.tasks);
   }
 
@@ -47,27 +55,36 @@ export class TaskStoreService {
   }
 
   addTask(task: Task): void {
-    this.http.post(`${this.firebaseRootURL}/task.json`, task).subscribe({
-      next: (res) => {
-        task.taskId = res.name;
-        this.tasks.push(task);
-        this.tasksChangeSubject.next(this.tasks);
-      },
-      error: (err) => console.error('Error adding task', err),
-    });
+    this.http
+      .post<{ name: string }>(`${this.firebaseRootURL}/task.json`, task)
+      .subscribe({
+        next: (res) => {
+          task.taskId = res.name;
+          this.tasks.push(task);
+          this.tasksChangeSubject.next(this.tasks);
+        },
+        error: (err) => console.error('Error adding task', err),
+      });
   }
 
   updateTask(updatedTask: Task): void {
-    this.http.put<Task>(`${this.firebaseRootURL}/task/${updatedTask.taskId}.json`, updatedTask).subscribe({
-      next: (res) => {
-        const index = this.tasks.findIndex((task) => task.taskId === updatedTask.taskId);
-        if (index !== -1) {
-          this.tasks[index] = res;
-          this.tasksChangeSubject.next(this.tasks);
-        }
-      },
-      error: (err) => console.error('Error updating the task', err),
-    });
+    this.http
+      .put<Task>(
+        `${this.firebaseRootURL}/task/${updatedTask.taskId}.json`,
+        updatedTask
+      )
+      .subscribe({
+        next: (res) => {
+          const index = this.tasks.findIndex(
+            (task) => task.taskId === updatedTask.taskId
+          );
+          if (index !== -1) {
+            this.tasks[index] = res;
+            this.tasksChangeSubject.next(this.tasks);
+          }
+        },
+        error: (err) => console.error('Error updating the task', err),
+      });
   }
 
   deleteTask(taskId: string): void {
@@ -83,8 +100,6 @@ export class TaskStoreService {
   getAllTasks(): Task[] {
     return this.tasks;
   }
-
-
 
   getTaskById(id: string): Task | undefined {
     return this.tasks.find((task) => task.taskId === id);
